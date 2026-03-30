@@ -30,12 +30,9 @@ export const UserMenu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="flex items-center gap-2 rounded-full outline-none ring-ring focus-visible:ring-2"
+          className="rounded-full outline-none ring-ring focus-visible:ring-2"
           aria-label="Menu do usuario"
         >
-          <span className="hidden text-sm text-muted-foreground sm:block">
-            {user?.email}
-          </span>
           <Avatar className="h-8 w-8 cursor-pointer transition-opacity hover:opacity-80">
             <AvatarFallback>
               {user ? getInitials(user.email) : <User className="h-4 w-4" />}

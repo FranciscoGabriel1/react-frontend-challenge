@@ -1,11 +1,20 @@
-import axios, { type AxiosInstance, type AxiosError } from 'axios'
+import axios, { type AxiosError, type AxiosInstance } from 'axios'
 import type { IHttpClient, RequestConfig } from './IHttpClient'
+
+type ApiErrorPayload = {
+  message?: string
+  status_message?: string
+}
 
 export class AxiosHttpClient implements IHttpClient {
   private readonly client: AxiosInstance
 
-  constructor(baseURL: string, defaultHeaders?: Record<string, string>) {
-    this.client = axios.create({ baseURL, headers: defaultHeaders })
+  constructor(baseURL: string, defaultConfig?: RequestConfig) {
+    this.client = axios.create({
+      baseURL,
+      headers: defaultConfig?.headers,
+      params: defaultConfig?.params,
+    })
     this.setupInterceptors()
   }
 
@@ -14,14 +23,26 @@ export class AxiosHttpClient implements IHttpClient {
       (response) => response,
       (error: AxiosError) => {
         const status = error.response?.status
+        const apiMessage = this.getApiMessage(error)
         const message =
-          status === 401 ? 'Não autorizado'
-          : status === 404 ? 'Recurso não encontrado'
-          : status === 429 ? 'Muitas requisições. Tente novamente.'
-          : 'Erro inesperado. Tente novamente.'
+          apiMessage
+          ?? (status === 401 ? 'Nao autorizado'
+          : status === 404 ? 'Recurso nao encontrado'
+          : status === 429 ? 'Muitas requisicoes. Tente novamente.'
+          : 'Erro inesperado. Tente novamente.')
         return Promise.reject(new Error(message))
       },
     )
+  }
+
+  private getApiMessage(error: AxiosError): string | undefined {
+    const data = error.response?.data
+    if (!data || typeof data !== 'object') {
+      return undefined
+    }
+
+    const payload = data as ApiErrorPayload
+    return payload.status_message ?? payload.message
   }
 
   async get<T>(url: string, config?: RequestConfig): Promise<T> {
