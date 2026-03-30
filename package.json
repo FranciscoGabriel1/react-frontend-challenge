@@ -1,0 +1,12 @@
+{
+  "name": "react-frontend-challenge",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix cinedash",
+    "build": "npm run build --prefix cinedash",
+    "preview": "npm run preview --prefix cinedash",
+    "test": "npm run test --prefix cinedash",
+    "test:run": "npm run test:run --prefix cinedash",
+    "install": "npm install --prefix cinedash"
+  }
+}
