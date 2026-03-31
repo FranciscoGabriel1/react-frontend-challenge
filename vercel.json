@@ -1,0 +1,4 @@
+{
+  "outputDirectory": "cinedash/dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
