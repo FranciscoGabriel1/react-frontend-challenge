@@ -1,24 +1,21 @@
 import { useNavigate } from '@tanstack/react-router'
-import { Sun, Moon, LogOut, User } from 'lucide-react'
+import { LogOut, User } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu'
 import { useAuthStore } from '@/features/auth'
-import { useThemeStore } from '@/shared/stores/themeStore'
 
 const getInitials = (email: string) =>
   email.slice(0, 2).toUpperCase()
 
 export const UserMenu = () => {
   const { user, logout } = useAuthStore()
-  const { theme, toggleTheme } = useThemeStore()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -50,18 +47,6 @@ export const UserMenu = () => {
             </p>
           </div>
         </DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={toggleTheme}>
-            {theme === 'dark'
-              ? <Sun className="h-4 w-4" aria-hidden="true" />
-              : <Moon className="h-4 w-4" aria-hidden="true" />
-            }
-            {theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 

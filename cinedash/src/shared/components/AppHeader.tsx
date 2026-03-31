@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import { Film, Search, X, Menu } from 'lucide-react'
+import { Film, Search, X, Menu, Sun, Moon } from 'lucide-react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDebounce } from '@/shared/hooks/useDebounce'
+import { useThemeStore } from '@/shared/stores/themeStore'
 import { UserMenu } from './UserMenu'
 
 const NAV_LINKS = [
@@ -24,6 +25,8 @@ const AppHeader = () => {
   useEffect(() => {
     if (searchOpen) inputRef.current?.focus()
   }, [searchOpen])
+
+  const { theme, toggleTheme } = useThemeStore()
 
   const [prevPathname, setPrevPathname] = useState(pathname)
   if (prevPathname !== pathname) {
@@ -114,6 +117,17 @@ const AppHeader = () => {
               <Search className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
+
+          <button
+            onClick={toggleTheme}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+          >
+            {theme === 'dark'
+              ? <Sun className="h-4 w-4" aria-hidden="true" />
+              : <Moon className="h-4 w-4" aria-hidden="true" />
+            }
+          </button>
 
           <button
             onClick={() => setMenuOpen((o) => !o)}
