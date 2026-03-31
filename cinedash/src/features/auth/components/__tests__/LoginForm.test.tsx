@@ -9,6 +9,9 @@ vi.mock('@tanstack/react-router', async () => {
   return { ...actual, useNavigate: () => vi.fn() }
 })
 
+vi.mock('lottie-react', () => ({ default: () => null }))
+vi.mock('../BannerPanel', () => ({ BannerPanel: () => null }))
+
 beforeEach(() => {
   useAuthStore.setState({ token: null, user: null })
 })
