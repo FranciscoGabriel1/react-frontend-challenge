@@ -3,107 +3,57 @@ import { Link } from '@tanstack/react-router'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
+const NAV_LINKS = [
+  { label: 'Inicio', to: '/dashboard', external: false },
+  { label: 'Filmes', to: '/filmes', external: false },
+  { label: 'Series', to: '/series', external: false },
+  { label: 'Minha Lista', to: '/watchlist', external: false },
+  { label: 'TMDB', to: 'https://www.themoviedb.org', external: true },
+  { label: 'API Docs', to: 'https://developers.themoviedb.org', external: true },
+] as const
+
+const linkClass = 'text-sm text-muted-foreground transition-colors hover:text-foreground'
+
 const AppFooter = () => (
-  <footer className="mt-auto border-t border-border/50 bg-background">
-    <div className="mx-auto max-w-screen-2xl px-4 py-10 sm:px-6">
-      <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <Film className="h-5 w-5 text-primary" aria-hidden="true" />
-            <span className="text-base font-bold">CineDash</span>
-          </div>
-          <p className="max-w-xs text-sm text-muted-foreground">
-            Descubra, explore e organize os melhores filmes do cinema.
-          </p>
-        </div>
-
-        <div className="flex gap-12">
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Navegacao
-            </p>
-            <ul className="flex flex-col gap-2">
-              <li>
-                <Link
-                  to="/dashboard"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/filmes"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Filmes
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/series"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Series
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/watchlist"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  Minha Lista
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Sobre
-            </p>
-            <ul className="flex flex-col gap-2">
-              <li>
-                <a
-                  href="https://www.themoviedb.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  TMDB
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://developers.themoviedb.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  API Docs
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+  <footer className="mt-auto bg-background">
+    <div className="mx-auto flex max-w-screen-2xl flex-col items-center px-6 pb-10 pt-12 sm:px-10 lg:px-16">
+      <div className="mb-8 flex items-center gap-2">
+        <Film className="h-4 w-4 text-primary" aria-hidden="true" />
+        <span className="text-sm font-bold">CineDash</span>
       </div>
 
-      <div className="mt-8 flex flex-col gap-2 border-t border-border/50 pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-muted-foreground">
-          © {CURRENT_YEAR} CineDash. Todos os direitos reservados.
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Dados fornecidos por{' '}
-          <a
-            href="https://www.themoviedb.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary hover:underline"
-          >
-            The Movie Database (TMDB)
-          </a>
-        </p>
+      <div className="mb-8 grid grid-cols-3 gap-x-16 gap-y-3 sm:grid-cols-3">
+        {NAV_LINKS.map(({ label, to, external }) =>
+          external ? (
+            <a
+              key={label}
+              href={to}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={linkClass}
+            >
+              {label}
+            </a>
+          ) : (
+            <Link key={label} to={to} className={linkClass}>
+              {label}
+            </Link>
+          ),
+        )}
       </div>
+
+      <p className="text-xs text-muted-foreground/60">
+        © {CURRENT_YEAR} CineDash. Dados fornecidos por{' '}
+        <a
+          href="https://www.themoviedb.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-muted-foreground"
+        >
+          The Movie Database
+        </a>
+        .
+      </p>
     </div>
   </footer>
 )

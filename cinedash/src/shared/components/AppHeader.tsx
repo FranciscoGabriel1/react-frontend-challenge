@@ -25,6 +25,15 @@ const AppHeader = () => {
     if (searchOpen) inputRef.current?.focus()
   }, [searchOpen])
 
+  const [prevPathname, setPrevPathname] = useState(pathname)
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname)
+    if (pathname !== '/dashboard' && pathname !== '/') {
+      setSearchOpen(false)
+      setSearchValue('')
+    }
+  }
+
   useEffect(() => {
     if (!searchOpen) return
     void navigate({
@@ -47,7 +56,7 @@ const AppHeader = () => {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-3 sm:px-10 lg:px-16">
         <div className="flex items-center gap-8">
           <Link

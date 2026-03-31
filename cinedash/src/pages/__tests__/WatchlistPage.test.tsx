@@ -88,7 +88,7 @@ describe('WatchlistPage', () => {
       isInWatchlist: vi.fn(),
     })
     render(<WatchlistPage />)
-    expect(screen.getByText('2 filmes')).toBeInTheDocument()
+    expect(screen.getByText('2 de 2 filmes')).toBeInTheDocument()
   })
 
   it('exibe singular para um filme', () => {
@@ -98,7 +98,7 @@ describe('WatchlistPage', () => {
       isInWatchlist: vi.fn(),
     })
     render(<WatchlistPage />)
-    expect(screen.getByText('1 filme')).toBeInTheDocument()
+    expect(screen.getByText('1 de 1 filme')).toBeInTheDocument()
   })
 
   it('chama toggleMovie ao clicar em remover', () => {
