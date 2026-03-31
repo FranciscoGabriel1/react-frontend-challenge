@@ -1,1 +1,2 @@
-// TODO: Watchlist feature - exports públicos
+export { useWatchlistStore } from './store/watchlistStore'
+export { useWatchlist } from './hooks/useWatchlist'

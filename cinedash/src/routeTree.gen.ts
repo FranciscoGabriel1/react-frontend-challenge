@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthWatchlistRouteImport } from './routes/_auth.watchlist'
+import { Route as AuthSeriesRouteImport } from './routes/_auth.series'
+import { Route as AuthFilmesRouteImport } from './routes/_auth.filmes'
 import { Route as AuthDashboardRouteImport } from './routes/_auth.dashboard'
 import { Route as AuthMovieIdRouteImport } from './routes/_auth.movie.$id'
 
@@ -29,6 +32,21 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthWatchlistRoute = AuthWatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSeriesRoute = AuthSeriesRouteImport.update({
+  id: '/series',
+  path: '/series',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthFilmesRoute = AuthFilmesRouteImport.update({
+  id: '/filmes',
+  path: '/filmes',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthDashboardRoute = AuthDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -44,12 +62,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthDashboardRoute
+  '/filmes': typeof AuthFilmesRoute
+  '/series': typeof AuthSeriesRoute
+  '/watchlist': typeof AuthWatchlistRoute
   '/movie/$id': typeof AuthMovieIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthDashboardRoute
+  '/filmes': typeof AuthFilmesRoute
+  '/series': typeof AuthSeriesRoute
+  '/watchlist': typeof AuthWatchlistRoute
   '/movie/$id': typeof AuthMovieIdRoute
 }
 export interface FileRoutesById {
@@ -58,19 +82,39 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/_auth/dashboard': typeof AuthDashboardRoute
+  '/_auth/filmes': typeof AuthFilmesRoute
+  '/_auth/series': typeof AuthSeriesRoute
+  '/_auth/watchlist': typeof AuthWatchlistRoute
   '/_auth/movie/$id': typeof AuthMovieIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/movie/$id'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/filmes'
+    | '/series'
+    | '/watchlist'
+    | '/movie/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/movie/$id'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/filmes'
+    | '/series'
+    | '/watchlist'
+    | '/movie/$id'
   id:
     | '__root__'
     | '/'
     | '/_auth'
     | '/login'
     | '/_auth/dashboard'
+    | '/_auth/filmes'
+    | '/_auth/series'
+    | '/_auth/watchlist'
     | '/_auth/movie/$id'
   fileRoutesById: FileRoutesById
 }
@@ -103,6 +147,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/watchlist': {
+      id: '/_auth/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof AuthWatchlistRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/series': {
+      id: '/_auth/series'
+      path: '/series'
+      fullPath: '/series'
+      preLoaderRoute: typeof AuthSeriesRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/filmes': {
+      id: '/_auth/filmes'
+      path: '/filmes'
+      fullPath: '/filmes'
+      preLoaderRoute: typeof AuthFilmesRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/dashboard': {
       id: '/_auth/dashboard'
       path: '/dashboard'
@@ -122,11 +187,17 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthDashboardRoute: typeof AuthDashboardRoute
+  AuthFilmesRoute: typeof AuthFilmesRoute
+  AuthSeriesRoute: typeof AuthSeriesRoute
+  AuthWatchlistRoute: typeof AuthWatchlistRoute
   AuthMovieIdRoute: typeof AuthMovieIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthDashboardRoute: AuthDashboardRoute,
+  AuthFilmesRoute: AuthFilmesRoute,
+  AuthSeriesRoute: AuthSeriesRoute,
+  AuthWatchlistRoute: AuthWatchlistRoute,
   AuthMovieIdRoute: AuthMovieIdRoute,
 }
 

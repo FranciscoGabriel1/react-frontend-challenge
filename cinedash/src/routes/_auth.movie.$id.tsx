@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { z } from 'zod'
 
-const MovieDetailPlaceholder = () => (
-  <main className="mx-auto w-full max-w-screen-2xl px-4 py-10 sm:px-6">
-    <p className="text-muted-foreground">TODO: detalhes do filme</p>
-  </main>
-)
+const movieSearchSchema = z.object({
+  t: z.enum(['movie', 'tv']).optional(),
+})
 
 export const Route = createFileRoute('/_auth/movie/$id')({
-  component: MovieDetailPlaceholder,
+  validateSearch: movieSearchSchema,
+  component: () => null,
 })

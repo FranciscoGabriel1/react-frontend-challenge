@@ -43,7 +43,7 @@ const MovieHero = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/20 to-transparent" />
 
       <motion.div
-        className="absolute bottom-0 left-0 right-0 px-4 pb-12 sm:px-6 sm:pb-16 lg:max-w-2xl"
+        className="absolute bottom-0 left-0 right-0 px-6 pb-12 sm:px-10 sm:pb-16 lg:px-16 lg:max-w-3xl"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}

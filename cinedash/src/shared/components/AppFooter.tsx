@@ -28,13 +28,32 @@ const AppFooter = () => (
                   to="/dashboard"
                   className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Dashboard
+                  Inicio
                 </Link>
               </li>
               <li>
-                <span className="text-sm text-muted-foreground/50 cursor-default">
+                <Link
+                  to="/filmes"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Filmes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/series"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Series
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/watchlist"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
                   Minha Lista
-                </span>
+                </Link>
               </li>
             </ul>
           </div>

@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Search, X } from 'lucide-react'
+import { useSearch } from '@tanstack/react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MovieHero } from '@/features/movies/components/MovieHero'
 import { MovieCarousel } from '@/features/movies/components/MovieCarousel'
@@ -34,44 +33,19 @@ const GenreCarousel = ({ genre }: GenreCarouselProps) => {
 }
 
 const DashboardPage = () => {
-  const [searchQuery, setSearchQuery] = useState('')
+  const { q } = useSearch({ strict: false }) as { q?: string }
+  const searchQuery = q ?? ''
 
   const { data: trending, isLoading: trendingLoading } = useTrending()
   const { data: popular, isLoading: popularLoading } = useMovies({})
 
-  const isSearchMode = searchQuery.length > SEARCH_MIN_LENGTH
+  const isSearchMode = searchQuery.length >= SEARCH_MIN_LENGTH
 
   return (
     <>
-      <MovieHero />
+      {!isSearchMode && <MovieHero />}
 
-      <main className="mx-auto w-full max-w-screen-2xl px-4 pb-16 sm:px-6">
-        <div className="py-6">
-          <div className="relative max-w-md">
-            <Search
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <input
-              type="search"
-              placeholder="Buscar filmes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-10 w-full rounded-full border-0 bg-muted pl-9 pr-9 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary"
-              aria-label="Buscar filmes"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                aria-label="Limpar busca"
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-            )}
-          </div>
-        </div>
-
+      <main className="w-full pb-16">
         <AnimatePresence mode="wait">
           {isSearchMode ? (
             <motion.div
@@ -80,6 +54,7 @@ const DashboardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
+              className="px-6 pt-8 sm:px-10 lg:px-16"
             >
               <h2 className="mb-6 text-lg font-semibold">
                 Resultados para &quot;{searchQuery}&quot;
@@ -93,7 +68,7 @@ const DashboardPage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="flex flex-col gap-10"
+              className="flex flex-col gap-10 pt-8"
             >
               <MovieCarousel
                 title="Em Alta"

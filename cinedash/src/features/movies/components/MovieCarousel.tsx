@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { motion, type Variants } from 'framer-motion'
 import { MovieCard } from './MovieCard'
@@ -29,6 +29,19 @@ const itemVariants: Variants = {
 
 const MovieCarousel = ({ title, movies, isLoading, numbered }: MovieCarouselProps) => {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [isAtStart, setIsAtStart] = useState(true)
+  const [isAtEnd, setIsAtEnd] = useState(false)
+
+  const updateScrollState = () => {
+    const el = scrollRef.current
+    if (!el) return
+    setIsAtStart(el.scrollLeft <= 0)
+    setIsAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2)
+  }
+
+  useEffect(() => {
+    updateScrollState()
+  }, [movies, isLoading])
 
   const scroll = (direction: 'left' | 'right') => {
     scrollRef.current?.scrollBy({
@@ -37,25 +50,36 @@ const MovieCarousel = ({ title, movies, isLoading, numbered }: MovieCarouselProp
     })
   }
 
+  const leftVisible = !isAtStart
+  const rightVisible = !isAtEnd
+
   return (
     <section className="group/carousel">
-      <h2 className="mb-3 text-lg font-semibold tracking-tight">{title}</h2>
+      <h2 className="mb-3 pl-6 text-lg font-semibold tracking-tight sm:pl-10 lg:pl-16">
+        {title}
+      </h2>
 
       <div className="relative">
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-0 z-20 flex h-full w-12 items-center justify-center bg-gradient-to-r from-background/90 to-transparent opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100"
+          className={`absolute left-0 top-0 z-20 flex h-full w-14 items-center justify-center bg-gradient-to-r from-background/95 to-transparent transition-opacity duration-200 ${
+            leftVisible
+              ? 'opacity-0 group-hover/carousel:opacity-100'
+              : 'pointer-events-none opacity-0'
+          }`}
           aria-label={`${title} - rolar para esquerda`}
+          aria-hidden={!leftVisible}
         >
           <ChevronLeft className="h-6 w-6 drop-shadow-lg" />
         </button>
 
         <div
           ref={scrollRef}
-          className="overflow-x-auto scrollbar-hide py-4 -my-4"
+          onScroll={updateScrollState}
+          className="-my-4 overflow-x-auto scrollbar-hide py-4"
         >
           {isLoading ? (
-            <div className="flex gap-3">
+            <div className="flex gap-3 pl-6 sm:pl-10 lg:pl-16">
               {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
                 <div key={i} className="w-[148px] shrink-0 sm:w-[164px] md:w-[180px]">
                   <MovieSkeleton />
@@ -64,7 +88,7 @@ const MovieCarousel = ({ title, movies, isLoading, numbered }: MovieCarouselProp
             </div>
           ) : (
             <motion.div
-              className="flex gap-3"
+              className="flex gap-3 pl-6 sm:pl-10 lg:pl-16"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -87,8 +111,13 @@ const MovieCarousel = ({ title, movies, isLoading, numbered }: MovieCarouselProp
 
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-0 z-20 flex h-full w-12 items-center justify-center bg-gradient-to-l from-background/90 to-transparent opacity-0 transition-opacity duration-200 group-hover/carousel:opacity-100"
+          className={`absolute right-0 top-0 z-20 flex h-full w-14 items-center justify-center bg-gradient-to-l from-background/95 to-transparent transition-opacity duration-200 ${
+            rightVisible
+              ? 'opacity-0 group-hover/carousel:opacity-100'
+              : 'pointer-events-none opacity-0'
+          }`}
           aria-label={`${title} - rolar para direita`}
+          aria-hidden={!rightVisible}
         >
           <ChevronRight className="h-6 w-6 drop-shadow-lg" />
         </button>
