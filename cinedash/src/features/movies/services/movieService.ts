@@ -44,6 +44,8 @@ class MovieService {
     }
 
     if (filters.genre) params.with_genres = filters.genre
+    if (filters.year) params.first_air_date_year = filters.year
+    if (filters.minRating) params['vote_average.gte'] = filters.minRating
 
     return this.http
       .get<PaginatedResponse<RawTvShow>>('/discover/tv', { params })

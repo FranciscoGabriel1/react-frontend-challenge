@@ -76,6 +76,8 @@ export interface BrowseFilters {
   genre?: number
   page?: number
   sortBy?: string
+  year?: number
+  minRating?: number
 }
 
 export interface RawTvShow {

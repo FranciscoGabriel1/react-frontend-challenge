@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Film, Search, X } from 'lucide-react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
+import { useDebounce } from '@/shared/hooks/useDebounce'
 import { UserMenu } from './UserMenu'
 
 const NAV_LINKS = [
@@ -15,21 +16,22 @@ const AppHeader = () => {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const debouncedSearch = useDebounce(searchValue, 400)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (searchOpen) {
-      inputRef.current?.focus()
-    }
+    if (searchOpen) inputRef.current?.focus()
   }, [searchOpen])
 
-  const handleSearchChange = (value: string) => {
-    setSearchValue(value)
+  useEffect(() => {
+    if (!searchOpen) return
     void navigate({
       to: '/dashboard',
-      search: value.trim().length >= 2 ? { q: value.trim() } : {},
+      search: debouncedSearch.trim().length >= 2 ? { q: debouncedSearch.trim() } : {},
     })
-  }
+  }, [debouncedSearch, navigate, searchOpen])
+
+  const handleSearchChange = (value: string) => setSearchValue(value)
 
   const handleSearchClose = () => {
     setSearchOpen(false)
