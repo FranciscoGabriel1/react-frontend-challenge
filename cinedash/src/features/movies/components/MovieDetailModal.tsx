@@ -66,7 +66,7 @@ const MovieDetailModal = ({ id, mediaType = 'movie' }: MovieDetailModalProps) =>
 
       <div className="relative mx-auto my-6 max-w-2xl px-4 pb-8 sm:my-10">
         <motion.div
-          className="relative overflow-hidden rounded-2xl bg-card shadow-2xl"
+          className="relative rounded-2xl bg-card shadow-2xl"
           initial={{ y: 48, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 48, opacity: 0 }}
@@ -98,7 +98,7 @@ const MovieDetailModal = ({ id, mediaType = 'movie' }: MovieDetailModalProps) =>
             </div>
           ) : (
             <>
-              <div className="relative h-[48vh] min-h-[280px] overflow-hidden">
+              <div className="relative h-[48vh] min-h-[280px] overflow-hidden rounded-t-2xl">
                 {backdropUrl && (
                   <img
                     src={backdropUrl}
@@ -113,11 +113,11 @@ const MovieDetailModal = ({ id, mediaType = 'movie' }: MovieDetailModalProps) =>
               <div className="px-5 pb-8 sm:px-7">
                 <div className="-mt-14 flex gap-4 sm:gap-5">
                   {posterUrl && (
-                    <div className="w-20 shrink-0 sm:w-28">
+                    <div className="relative z-20 w-20 shrink-0 sm:w-28">
                       <img
                         src={posterUrl}
                         alt={movie.title}
-                        className="aspect-[2/3] w-full rounded-xl object-cover shadow-2xl"
+                        className="block h-auto w-full rounded-xl object-contain shadow-2xl"
                       />
                     </div>
                   )}
