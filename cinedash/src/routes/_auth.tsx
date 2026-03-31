@@ -1,8 +1,10 @@
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
 import { AnimatePresence } from 'framer-motion'
+import { Toaster } from 'sonner'
 import { useAuthStore } from '@/features/auth'
 import { AppHeader } from '@/shared/components/AppHeader'
 import { AppFooter } from '@/shared/components/AppFooter'
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal'
 
@@ -18,13 +20,16 @@ const AuthLayout = () => {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <AppHeader />
-      {movieId !== null ? <DashboardPage /> : <Outlet />}
+      <ErrorBoundary>
+        {movieId !== null ? <DashboardPage /> : <Outlet />}
+      </ErrorBoundary>
       <AnimatePresence>
         {movieId !== null && (
           <MovieDetailModal key={movieId} id={movieId} mediaType={mediaType} />
         )}
       </AnimatePresence>
       <AppFooter />
+      <Toaster richColors position="bottom-right" />
     </div>
   )
 }

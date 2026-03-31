@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Play, Plus, Check, ThumbsUp, ChevronDown, VolumeX, Volume2 } from 'lucide-react'
@@ -69,8 +69,33 @@ const MovieHoverCard = ({
   const { top, left, transformOriginX } = getPosition(anchorRect)
 
   const previewUrl = trailer
-    ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&loop=1&playlist=${trailer.key}&enablejsapi=1`
+    ? `https://www.youtube.com/embed/${trailer.key}?enablejsapi=1&autoplay=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${trailer.key}`
     : null
+
+  const sendPlayerCommand = (func: string, args: unknown[] = []) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func, args }),
+      '*',
+    )
+  }
+
+  useEffect(() => {
+    if (!previewUrl) return
+    const parseMessage = (raw: string): Record<string, unknown> | null => {
+      try { return JSON.parse(raw) as Record<string, unknown> }
+      catch { return null }
+    }
+    const handleMessage = (e: MessageEvent) => {
+      if (typeof e.data !== 'string') return
+      const data = parseMessage(e.data)
+      if (data?.event === 'onReady') {
+        sendPlayerCommand('playVideo')
+        sendPlayerCommand('setVolume', [100])
+      }
+    }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [previewUrl])
 
   const handleToggleMute = (e: React.MouseEvent) => {
     e.stopPropagation()

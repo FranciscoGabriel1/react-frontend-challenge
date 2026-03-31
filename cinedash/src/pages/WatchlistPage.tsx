@@ -68,7 +68,11 @@ const WatchlistPage = () => {
         cell: ({ row }) => (
           <button
             onClick={() =>
-              void navigate({ to: '/movie/$id', params: { id: String(row.original.id) } })
+              void navigate({
+                to: '/movie/$id',
+                params: { id: String(row.original.id) },
+                search: row.original.mediaType === 'tv' ? { t: 'tv' as const } : {},
+              })
             }
             className="text-left font-medium hover:underline max-w-[180px] truncate block"
           >

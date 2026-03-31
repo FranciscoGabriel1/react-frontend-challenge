@@ -14,7 +14,7 @@ interface MovieCardProps {
   rank?: number
 }
 
-const SHOW_DELAY_MS = 1000
+const SHOW_DELAY_MS = 500
 const HIDE_DELAY_MS = 150
 
 const MovieCard = ({ movie, rank }: MovieCardProps) => {

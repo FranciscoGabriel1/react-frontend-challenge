@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { ChevronDown, Check } from 'lucide-react'
+import { ChevronDown, Check, AlertCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/shared/ui/button'
 import { MovieCard } from '@/features/movies/components/MovieCard'
 import { MovieSkeleton } from '@/features/movies/components/MovieSkeleton'
 import { useMovies } from '@/features/movies/hooks/useMovies'
@@ -31,13 +32,15 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
   const [sortOpen, setSortOpen] = useState(false)
 
   const movieResult = useMovies(
-    mediaType === 'movie' ? { genre: selectedGenre, page, sortBy } : { page: 0 },
+    { genre: selectedGenre, page, sortBy },
+    mediaType === 'movie',
   )
   const tvResult = useTvShows(
-    mediaType === 'tv' ? { genre: selectedGenre, page, sortBy } : {},
+    { genre: selectedGenre, page, sortBy },
+    mediaType === 'tv',
   )
 
-  const { data, isLoading } = mediaType === 'movie' ? movieResult : tvResult
+  const { data, isLoading, isError, refetch } = mediaType === 'movie' ? movieResult : tvResult
 
   const { data: movieGenres } = useGenres()
   const { data: tvGenreData } = useTvGenres()
@@ -146,6 +149,19 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
           {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
             <MovieSkeleton key={i} />
           ))}
+        </div>
+      ) : isError ? (
+        <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
+          <AlertCircle className="h-10 w-10 text-destructive" aria-hidden="true" />
+          <div>
+            <p className="font-semibold">Erro ao carregar</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Nao foi possivel buscar o conteudo. Verifique sua conexao.
+            </p>
+          </div>
+          <Button onClick={() => void refetch()} variant="outline" className="rounded-full">
+            Tentar novamente
+          </Button>
         </div>
       ) : (
         <motion.div
