@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react'
+import { memo, useRef, useState, useCallback, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { AnimatePresence } from 'framer-motion'
@@ -17,7 +17,7 @@ interface MovieCardProps {
 const SHOW_DELAY_MS = 500
 const HIDE_DELAY_MS = 150
 
-const MovieCard = ({ movie, rank }: MovieCardProps) => {
+const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const cardRef = useRef<HTMLDivElement>(null)
@@ -163,6 +163,6 @@ const MovieCard = ({ movie, rank }: MovieCardProps) => {
       </AnimatePresence>
     </>
   )
-}
+})
 
 export { MovieCard }

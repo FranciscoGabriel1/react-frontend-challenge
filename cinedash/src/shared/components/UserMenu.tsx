@@ -70,7 +70,7 @@ export const UserMenu = () => {
           className="text-destructive focus:text-destructive"
         >
           <LogOut className="h-4 w-4" aria-hidden="true" />
-          Sair
+          Sair do CineDash
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { ChevronDown, Check, AlertCircle } from 'lucide-react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { ChevronDown, Check, AlertCircle, Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/shared/ui/button'
 import { MovieCard } from '@/features/movies/components/MovieCard'
 import { MovieSkeleton } from '@/features/movies/components/MovieSkeleton'
-import { useMovies } from '@/features/movies/hooks/useMovies'
-import { useTvShows } from '@/features/movies/hooks/useTvShows'
+import { useInfiniteMovies } from '@/features/movies/hooks/useInfiniteMovies'
+import { useInfiniteTvShows } from '@/features/movies/hooks/useInfiniteTvShows'
 import { useGenres } from '@/features/movies/hooks/useGenres'
 import { useTvGenres } from '@/features/movies/hooks/useTvGenres'
 
@@ -48,44 +48,57 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
   const [selectedYearLabel, setSelectedYearLabel] = useState('Qualquer ano')
   const [selectedRating, setSelectedRating] = useState<number | undefined>()
   const [selectedRatingLabel, setSelectedRatingLabel] = useState('Qualquer nota')
-  const [page, setPage] = useState(1)
   const [genreOpen, setGenreOpen] = useState(false)
   const [sortOpen, setSortOpen] = useState(false)
   const [yearOpen, setYearOpen] = useState(false)
   const [ratingOpen, setRatingOpen] = useState(false)
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
-  const closeAll = () => { setGenreOpen(false); setSortOpen(false); setYearOpen(false); setRatingOpen(false) }
+  const closeAll = useCallback(() => { setGenreOpen(false); setSortOpen(false); setYearOpen(false); setRatingOpen(false) }, [])
 
-  const movieResult = useMovies(
-    { genre: selectedGenre, page, sortBy, year: selectedYear, minRating: selectedRating },
-    mediaType === 'movie',
-  )
-  const tvResult = useTvShows(
-    { genre: selectedGenre, page, sortBy, year: selectedYear, minRating: selectedRating },
-    mediaType === 'tv',
-  )
+  const filters = { genre: selectedGenre, sortBy, year: selectedYear, minRating: selectedRating }
 
-  const { data, isLoading, isError, refetch } = mediaType === 'movie' ? movieResult : tvResult
+  const movieResult = useInfiniteMovies(filters, mediaType === 'movie')
+  const tvResult = useInfiniteTvShows(filters, mediaType === 'tv')
+
+  const { data, isLoading, isError, refetch, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    mediaType === 'movie' ? movieResult : tvResult
+
+  const movies = useMemo(() => data?.pages.flatMap((p) => p.results) ?? [], [data])
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          void fetchNextPage()
+        }
+      },
+      { rootMargin: '300px' },
+    )
+
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const { data: movieGenres } = useGenres()
   const { data: tvGenreData } = useTvGenres()
-  const genreList =
-    mediaType === 'movie' ? movieGenres?.genres : tvGenreData?.genres
+  const genreList = mediaType === 'movie' ? movieGenres?.genres : tvGenreData?.genres
 
-  const totalPages = data?.total_pages ?? 1
-
-  const handleSelectGenre = (id: number | undefined, name: string) => {
-    setSelectedGenre(id); setSelectedGenreName(name); setPage(1); closeAll()
-  }
-  const handleSelectSort = (value: string, label: string) => {
-    setSortBy(value); setSortLabel(label); setPage(1); closeAll()
-  }
-  const handleSelectYear = (value: number | undefined, label: string) => {
-    setSelectedYear(value); setSelectedYearLabel(label); setPage(1); closeAll()
-  }
-  const handleSelectRating = (value: number | undefined, label: string) => {
-    setSelectedRating(value); setSelectedRatingLabel(label); setPage(1); closeAll()
-  }
+  const handleSelectGenre = useCallback((id: number | undefined, name: string) => {
+    setSelectedGenre(id); setSelectedGenreName(name); closeAll()
+  }, [closeAll])
+  const handleSelectSort = useCallback((value: string, label: string) => {
+    setSortBy(value); setSortLabel(label); closeAll()
+  }, [closeAll])
+  const handleSelectYear = useCallback((value: number | undefined, label: string) => {
+    setSelectedYear(value); setSelectedYearLabel(label); closeAll()
+  }, [closeAll])
+  const handleSelectRating = useCallback((value: number | undefined, label: string) => {
+    setSelectedRating(value); setSelectedRatingLabel(label); closeAll()
+  }, [closeAll])
 
   return (
     <main className="mx-auto w-full max-w-screen-2xl px-6 pb-16 pt-6 sm:px-10 lg:px-16">
@@ -260,39 +273,27 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
           </Button>
         </div>
       ) : (
-        <motion.div
-          key={`${selectedGenre}-${sortBy}-${selectedYear}-${selectedRating}-${page}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.25 }}
-          className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
-        >
-          {data?.results.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
-        </motion.div>
-      )}
+        <>
+          <motion.div
+            key={`${selectedGenre}-${sortBy}-${selectedYear}-${selectedRating}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7"
+          >
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </motion.div>
 
-      {totalPages > 1 && (
-        <div className="mt-10 flex items-center justify-center gap-3">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className="rounded-full border border-border/60 px-5 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Anterior
-          </button>
-          <span className="text-sm text-muted-foreground">
-            {page} / {Math.min(totalPages, 500)}
-          </span>
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page >= totalPages}
-            className="rounded-full border border-border/60 px-5 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Proximo
-          </button>
-        </div>
+          <div ref={sentinelRef} className="h-px" aria-hidden="true" />
+
+          {isFetchingNextPage && (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden="true" />
+            </div>
+          )}
+        </>
       )}
     </main>
   )
