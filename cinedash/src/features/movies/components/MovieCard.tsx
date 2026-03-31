@@ -113,23 +113,36 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
         }}
         aria-label={`Ver detalhes de ${movie.title}`}
       >
-        <div className="relative aspect-[2/3] overflow-hidden rounded-xl bg-muted">
-          {posterUrl ? (
-            <img
-              src={posterUrl}
-              alt={movie.title}
-              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-              loading="lazy"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <Film className="h-10 w-10 text-muted-foreground" aria-hidden="true" />
-            </div>
-          )}
+        <div className={`relative${rank !== undefined ? ' pb-6' : ''}`}>
+          <div className="relative aspect-[2/3] overflow-hidden rounded-xl bg-muted">
+            {posterUrl ? (
+              <img
+                src={posterUrl}
+                alt={movie.title}
+                className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                loading="lazy"
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <Film className="h-10 w-10 text-muted-foreground" aria-hidden="true" />
+              </div>
+            )}
+            {rank !== undefined && (
+              <div
+                className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent pointer-events-none"
+                aria-hidden="true"
+              />
+            )}
+          </div>
 
           {rank !== undefined && (
             <span
-              className="absolute bottom-0 left-1 select-none text-7xl font-black leading-none text-white/15 pointer-events-none"
+              className="absolute -bottom-1 left-0.5 select-none text-[5.5rem] font-black italic leading-none pointer-events-none z-10"
+              style={{
+                WebkitTextStroke: '2px rgba(255,255,255,0.85)',
+                color: 'transparent',
+                filter: 'drop-shadow(0 2px 12px rgba(0,0,0,1))',
+              }}
               aria-hidden="true"
             >
               {rank}
