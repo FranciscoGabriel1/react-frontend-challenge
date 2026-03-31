@@ -1,6 +1,5 @@
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
 import { AnimatePresence } from 'framer-motion'
-import { Toaster } from 'sonner'
 import { useAuthStore } from '@/features/auth'
 import { AppHeader } from '@/shared/components/AppHeader'
 import { AppFooter } from '@/shared/components/AppFooter'
@@ -29,7 +28,6 @@ const AuthLayout = () => {
         )}
       </AnimatePresence>
       <AppFooter />
-      <Toaster richColors position="bottom-right" />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { Play, Star } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/shared/ui/button'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { useTrending } from '../hooks/useTrending'
@@ -12,6 +13,7 @@ const MovieHeroSkeleton = () => (
 )
 
 const MovieHero = () => {
+  const navigate = useNavigate()
   const { data, isLoading } = useTrending()
   const featured = data?.results?.[0]
 
@@ -69,7 +71,16 @@ const MovieHero = () => {
         )}
 
         <div className="mt-6">
-          <Button className="h-11 rounded-full px-6 gap-2">
+          <Button
+            className="h-11 rounded-full px-6 gap-2"
+            onClick={() =>
+              void navigate({
+                to: '/movie/$id',
+                params: { id: String(featured.id) },
+                search: featured.mediaType === 'tv' ? { t: 'tv' as const } : {},
+              })
+            }
+          >
             <Play className="h-4 w-4 fill-current" aria-hidden="true" />
             Explorar
           </Button>

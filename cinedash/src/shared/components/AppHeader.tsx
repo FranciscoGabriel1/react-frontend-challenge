@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { Film, Search, X } from 'lucide-react'
+import { Film, Search, X, Menu } from 'lucide-react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useDebounce } from '@/shared/hooks/useDebounce'
 import { UserMenu } from './UserMenu'
 
@@ -14,6 +15,7 @@ const NAV_LINKS = [
 const AppHeader = () => {
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchValue, setSearchValue] = useState('')
   const debouncedSearch = useDebounce(searchValue, 400)
@@ -104,23 +106,46 @@ const AppHeader = () => {
             </button>
           )}
 
-          <nav className="flex items-center gap-0.5 md:hidden" aria-label="Navegacao mobile">
-            {NAV_LINKS.map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`rounded-md px-2 py-1 text-xs font-medium transition-colors hover:text-foreground ${
-                  isActiveLink(to) ? 'text-foreground' : 'text-muted-foreground'
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <button
+            onClick={() => setMenuOpen((o) => !o)}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X className="h-4 w-4" aria-hidden="true" /> : <Menu className="h-4 w-4" aria-hidden="true" />}
+          </button>
 
           <UserMenu />
         </div>
       </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="overflow-hidden border-t border-border/50 bg-background/95 backdrop-blur-xl md:hidden"
+            aria-label="Navegacao mobile"
+          >
+            <div className="mx-auto flex flex-col px-6 py-2 sm:px-10">
+              {NAV_LINKS.map(({ to, label }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setMenuOpen(false)}
+                  className={`py-3 text-sm font-medium transition-colors hover:text-foreground border-b border-border/30 last:border-0 ${
+                    isActiveLink(to) ? 'text-foreground' : 'text-muted-foreground'
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   )
 }
