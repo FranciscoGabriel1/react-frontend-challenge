@@ -1,4 +1,4 @@
-import { Film } from 'lucide-react'
+import { ArrowUp, Film } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -17,6 +17,15 @@ const linkClass = 'text-sm text-muted-foreground transition-colors hover:text-fo
 const AppFooter = () => (
   <footer className="mt-auto bg-background">
     <div className="mx-auto flex max-w-screen-2xl flex-col items-center px-6 pb-10 pt-12 sm:px-10 lg:px-16">
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Voltar ao topo"
+        className="mb-8 flex items-center gap-1.5 rounded-full border border-border px-4 py-1.5 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+      >
+        <ArrowUp className="h-3.5 w-3.5" aria-hidden="true" />
+        Voltar ao topo
+      </button>
+
       <div className="mb-8 flex items-center gap-2">
         <Film className="h-4 w-4 text-primary" aria-hidden="true" />
         <span className="text-sm font-bold">CineDash</span>
