@@ -8,6 +8,7 @@ import { getPosterUrl, formatYear, formatRating } from '../utils'
 import { movieKeys } from '../hooks/queryKeys'
 import { movieService } from '../services/movieService'
 import { MovieHoverCard } from './MovieHoverCard'
+import { Card, CardContent } from '@/shared/ui/card'
 
 interface MovieCardProps {
   movie: Movie
@@ -88,9 +89,9 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
 
   return (
     <>
-      <div
+      <Card
         ref={cardRef}
-        className="relative flex w-full cursor-pointer flex-col gap-2 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="relative w-full cursor-pointer text-left outline-none focus-visible:ring-2 focus-visible:ring-ring transition-shadow hover:shadow-lg hover:shadow-black/50"
         onMouseEnter={handleCardEnter}
         onMouseLeave={handleCardLeave}
         onClick={() =>
@@ -114,7 +115,7 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
         aria-label={`Ver detalhes de ${movie.title}`}
       >
         <div className={`relative${rank !== undefined ? ' pb-6' : ''}`}>
-          <div className="relative aspect-[2/3] overflow-hidden rounded-xl bg-muted">
+          <div className="relative aspect-[2/3] overflow-hidden rounded-t-xl bg-muted">
             {posterUrl ? (
               <img
                 src={posterUrl}
@@ -150,7 +151,7 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
           )}
         </div>
 
-        <div className="flex flex-col gap-0.5 px-0.5">
+        <CardContent>
           <p className="truncate text-sm font-medium">{movie.title}</p>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             {year && <span>{year}</span>}
@@ -161,8 +162,8 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
               </span>
             )}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <AnimatePresence>
         {anchorRect && (

@@ -98,13 +98,13 @@ const MovieDetailModal = ({ id, mediaType = 'movie' }: MovieDetailModalProps) =>
             </div>
           ) : (
             <>
-              <div className="relative h-[38vh] min-h-[240px] overflow-hidden">
+              <div className="relative h-[48vh] min-h-[280px] overflow-hidden">
                 {backdropUrl && (
                   <img
                     src={backdropUrl}
                     alt=""
                     aria-hidden="true"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover object-top"
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
@@ -113,11 +113,13 @@ const MovieDetailModal = ({ id, mediaType = 'movie' }: MovieDetailModalProps) =>
               <div className="px-5 pb-8 sm:px-7">
                 <div className="-mt-14 flex gap-4 sm:gap-5">
                   {posterUrl && (
-                    <img
-                      src={posterUrl}
-                      alt={movie.title}
-                      className="w-20 shrink-0 rounded-xl shadow-2xl sm:w-28"
-                    />
+                    <div className="w-20 shrink-0 sm:w-28">
+                      <img
+                        src={posterUrl}
+                        alt={movie.title}
+                        className="aspect-[2/3] w-full rounded-xl object-cover shadow-2xl"
+                      />
+                    </div>
                   )}
                   <div className="flex flex-col justify-end gap-2 pb-1">
                     <h2 className="text-xl font-bold leading-tight sm:text-2xl">{movie.title}</h2>
