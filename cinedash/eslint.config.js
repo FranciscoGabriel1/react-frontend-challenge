@@ -19,11 +19,18 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
   },
   {
-    files: ['src/routes/**/*.{ts,tsx}'],
+    files: ['src/routes/**/*.{ts,tsx}', 'src/shared/ui/**/*.{ts,tsx}'],
     rules: {
       'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
     },
   },
 ])
