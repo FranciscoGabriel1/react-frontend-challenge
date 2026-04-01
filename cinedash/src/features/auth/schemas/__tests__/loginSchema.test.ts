@@ -25,7 +25,7 @@ describe('loginSchema', () => {
       password: '123',
     })
     expect(result.success).toBe(false)
-    expect(result.error?.issues[0].message).toBe('Senha deve ter mais de 6 caracteres')
+    expect(result.error?.issues[0].message).toBe('Senha deve ter pelo menos 6 caracteres')
   })
 
   it('rejeita campos vazios', () => {

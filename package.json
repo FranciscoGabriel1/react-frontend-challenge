@@ -6,6 +6,7 @@
     "build": "npm run build --prefix cinedash",
     "preview": "npm run preview --prefix cinedash",
     "test": "npm run test --prefix cinedash",
+    "test:ui": "npm run test:ui --prefix cinedash",
     "test:run": "npm run test:run --prefix cinedash",
     "install": "npm install --prefix cinedash"
   }

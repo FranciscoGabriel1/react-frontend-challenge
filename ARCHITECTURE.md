@@ -153,7 +153,7 @@ Series de TV e filmes compartilham a mesma rota `/movie/$id`. O discriminador `?
 ```ts
 const loginSchema = z.object({
   email: z.string().email('E-mail invalido'),
-  password: z.string().min(6, 'Senha deve ter mais de 6 caracteres'),
+  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
 })
 ```
 

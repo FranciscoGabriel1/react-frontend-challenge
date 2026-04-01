@@ -123,7 +123,7 @@ export const LoginForm = () => {
           </div>
 
           <p className="text-center text-xs text-muted-foreground">
-            Use qualquer e-mail valido e senha com mais de 6 caracteres.
+            Use qualquer e-mail valido e senha com pelo menos 6 caracteres.
           </p>
         </div>
       </div>

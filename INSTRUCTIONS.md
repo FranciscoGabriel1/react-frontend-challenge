@@ -77,7 +77,7 @@ A aplicacao estara disponivel em `http://localhost:5173`.
 Como nao ha backend, a autenticacao e simulada no frontend.
 
 - **Email:** qualquer e-mail valido (ex: `user@cinedash.com`)
-- **Senha:** qualquer senha com mais de 6 caracteres
+- **Senha:** qualquer senha com pelo menos 6 caracteres
 
 ---
 

@@ -35,7 +35,7 @@ describe('LoginForm', () => {
     await userEvent.type(screen.getByPlaceholderText('E-mail'), 'user@cinedash.com')
     await userEvent.type(screen.getByPlaceholderText('Senha'), '123')
     await userEvent.click(screen.getByRole('button', { name: /entrar/i }))
-    expect(await screen.findByText('Senha deve ter mais de 6 caracteres')).toBeInTheDocument()
+    expect(await screen.findByText('Senha deve ter pelo menos 6 caracteres')).toBeInTheDocument()
   })
 
   it('autentica e navega com credenciais validas', async () => {
