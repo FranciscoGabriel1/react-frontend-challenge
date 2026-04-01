@@ -11,9 +11,26 @@ const FilmGrain = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let animId: number
+    let animId: number | null = null
+
+    const syncCanvasSize = () => {
+      const width = canvas.offsetWidth
+      const height = canvas.offsetHeight
+
+      if (width <= 0 || height <= 0) return false
+
+      if (canvas.width !== width) canvas.width = width
+      if (canvas.height !== height) canvas.height = height
+
+      return true
+    }
 
     const draw = () => {
+      if (!syncCanvasSize()) {
+        animId = null
+        return
+      }
+
       const { width, height } = canvas
       const imageData = ctx.createImageData(width, height)
       const data = imageData.data
@@ -30,19 +47,28 @@ const FilmGrain = () => {
       animId = requestAnimationFrame(draw)
     }
 
-    const resize = () => {
-      canvas.width = canvas.offsetWidth
-      canvas.height = canvas.offsetHeight
+    const startDrawing = () => {
+      if (!syncCanvasSize() || animId !== null) return
+      animId = requestAnimationFrame(draw)
     }
 
-    resize()
-    draw()
+    startDrawing()
 
-    const observer = new ResizeObserver(resize)
+    const observer = new ResizeObserver(() => {
+      if (!syncCanvasSize()) {
+        if (animId !== null) {
+          cancelAnimationFrame(animId)
+          animId = null
+        }
+        return
+      }
+
+      startDrawing()
+    })
     observer.observe(canvas)
 
     return () => {
-      cancelAnimationFrame(animId)
+      if (animId !== null) cancelAnimationFrame(animId)
       observer.disconnect()
     }
   }, [])
