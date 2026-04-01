@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { cn } from '@/lib/utils'
 
@@ -5,14 +6,14 @@ const DropdownMenu = DropdownMenuPrimitive.Root
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal
 const DropdownMenuGroup = DropdownMenuPrimitive.Group
-const DropdownMenuSeparator = ({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>) => (
+const DropdownMenuSeparator = ({ className, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Separator>) => (
   <DropdownMenuPrimitive.Separator
     className={cn('-mx-1 my-1 h-px bg-border', className)}
     {...props}
   />
 )
 
-const DropdownMenuContent = ({ className, sideOffset = 4, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) => (
+const DropdownMenuContent = ({ className, sideOffset = 4, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Content>) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       sideOffset={sideOffset}
@@ -29,7 +30,7 @@ const DropdownMenuContent = ({ className, sideOffset = 4, ...props }: React.Comp
   </DropdownMenuPrimitive.Portal>
 )
 
-const DropdownMenuItem = ({ className, inset, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & { inset?: boolean }) => (
+const DropdownMenuItem = ({ className, inset, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Item> & { inset?: boolean }) => (
   <DropdownMenuPrimitive.Item
     className={cn(
       'relative flex cursor-pointer select-none items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-colors',
@@ -42,7 +43,7 @@ const DropdownMenuItem = ({ className, inset, ...props }: React.ComponentProps<t
   />
 )
 
-const DropdownMenuLabel = ({ className, inset, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Label> & { inset?: boolean }) => (
+const DropdownMenuLabel = ({ className, inset, ...props }: ComponentProps<typeof DropdownMenuPrimitive.Label> & { inset?: boolean }) => (
   <DropdownMenuPrimitive.Label
     className={cn(
       'px-3 py-1.5 text-xs font-medium text-muted-foreground',

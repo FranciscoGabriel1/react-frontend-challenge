@@ -5,8 +5,7 @@ import { MovieCarousel } from '@/features/movies/components/MovieCarousel'
 import { SearchMovieGrid } from '@/features/movies/components/SearchMovieGrid'
 import { useMovies } from '@/features/movies/hooks/useMovies'
 import { useTrending } from '@/features/movies/hooks/useTrending'
-
-const SEARCH_MIN_LENGTH = 2
+import { SEARCH_MIN_LENGTH } from '@/shared/constants/search'
 
 const FEATURED_GENRES = [
   { id: 28, name: 'Acao' },

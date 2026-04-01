@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, type MouseEvent } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Play, Plus, Check, ThumbsUp, ChevronDown, VolumeX, Volume2 } from 'lucide-react'
@@ -12,6 +12,7 @@ import { movieService } from '../services/movieService'
 
 const HOVER_CARD_WIDTH = 320
 const HOVER_CARD_MARGIN = 16
+const YOUTUBE_ORIGIN = 'https://www.youtube.com'
 
 interface HoverCardPosition {
   top: number
@@ -67,15 +68,25 @@ const MovieHoverCard = ({
 
   const backdropUrl = getBackdropUrl(movie.backdrop_path, 'w780')
   const { top, left, transformOriginX } = getPosition(anchorRect)
+  const appOrigin = typeof window !== 'undefined' ? window.location.origin : null
 
   const previewUrl = trailer
-    ? `https://www.youtube.com/embed/${trailer.key}?enablejsapi=1&autoplay=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${trailer.key}`
+    ? `${YOUTUBE_ORIGIN}/embed/${trailer.key}?${new URLSearchParams({
+        enablejsapi: '1',
+        autoplay: '1',
+        controls: '0',
+        modestbranding: '1',
+        rel: '0',
+        loop: '1',
+        playlist: trailer.key,
+        ...(appOrigin ? { origin: appOrigin } : {}),
+      }).toString()}`
     : null
 
   const sendPlayerCommand = (func: string, args: unknown[] = []) => {
     iframeRef.current?.contentWindow?.postMessage(
       JSON.stringify({ event: 'command', func, args }),
-      '*',
+      YOUTUBE_ORIGIN,
     )
   }
 
@@ -86,6 +97,8 @@ const MovieHoverCard = ({
       catch { return null }
     }
     const handleMessage = (e: MessageEvent) => {
+      if (e.origin !== YOUTUBE_ORIGIN) return
+      if (e.source !== iframeRef.current?.contentWindow) return
       if (typeof e.data !== 'string') return
       const data = parseMessage(e.data)
       if (data?.event === 'onReady') {
@@ -97,14 +110,11 @@ const MovieHoverCard = ({
     return () => window.removeEventListener('message', handleMessage)
   }, [previewUrl])
 
-  const handleToggleMute = (e: React.MouseEvent) => {
+  const handleToggleMute = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     const newMuted = !isMuted
     setIsMuted(newMuted)
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: 'command', func: newMuted ? 'mute' : 'unMute', args: [] }),
-      '*',
-    )
+    sendPlayerCommand(newMuted ? 'mute' : 'unMute')
   }
 
   return createPortal(

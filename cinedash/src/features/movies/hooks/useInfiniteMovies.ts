@@ -9,7 +9,7 @@ const MAX_PAGES = 7
 
 export const useInfiniteMovies = (filters: InfiniteFilters = {}, enabled = true) =>
   useInfiniteQuery({
-    queryKey: [...movieKeys.lists(), 'infinite', filters] as const,
+    queryKey: movieKeys.infiniteList(filters),
     queryFn: ({ pageParam }) => movieService.discover({ ...filters, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>

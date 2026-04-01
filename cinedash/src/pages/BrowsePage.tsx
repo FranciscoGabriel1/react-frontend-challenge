@@ -13,11 +13,23 @@ interface BrowsePageProps {
   mediaType: 'movie' | 'tv'
 }
 
-const SORT_OPTIONS = [
+type SortOption = {
+  label: string
+  value: string
+}
+
+const MOVIE_SORT_OPTIONS: readonly SortOption[] = [
   { label: 'Popularidade', value: 'popularity.desc' },
   { label: 'Lancamento', value: 'release_date.desc' },
   { label: 'Avaliacao', value: 'vote_average.desc' },
   { label: 'A-Z', value: 'title.asc' },
+] as const
+
+const TV_SORT_OPTIONS: readonly SortOption[] = [
+  { label: 'Popularidade', value: 'popularity.desc' },
+  { label: 'Lancamento', value: 'first_air_date.desc' },
+  { label: 'Avaliacao', value: 'vote_average.desc' },
+  { label: 'A-Z', value: 'name.asc' },
 ] as const
 
 const RATING_OPTIONS = [
@@ -43,7 +55,6 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
   const [selectedGenre, setSelectedGenre] = useState<number | undefined>()
   const [selectedGenreName, setSelectedGenreName] = useState<string>('Generos')
   const [sortBy, setSortBy] = useState('popularity.desc')
-  const [sortLabel, setSortLabel] = useState('Popularidade')
   const [selectedYear, setSelectedYear] = useState<number | undefined>()
   const [selectedYearLabel, setSelectedYearLabel] = useState('Qualquer ano')
   const [selectedRating, setSelectedRating] = useState<number | undefined>()
@@ -56,7 +67,14 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
 
   const closeAll = useCallback(() => { setGenreOpen(false); setSortOpen(false); setYearOpen(false); setRatingOpen(false) }, [])
 
-  const filters = { genre: selectedGenre, sortBy, year: selectedYear, minRating: selectedRating }
+  const sortOptions = mediaType === 'movie' ? MOVIE_SORT_OPTIONS : TV_SORT_OPTIONS
+  const activeSortOption = sortOptions.find((option) => option.value === sortBy) ?? sortOptions[0]
+  const filters = {
+    genre: selectedGenre,
+    sortBy: activeSortOption.value,
+    year: selectedYear,
+    minRating: selectedRating,
+  }
 
   const movieResult = useInfiniteMovies(filters, mediaType === 'movie')
   const tvResult = useInfiniteTvShows(filters, mediaType === 'tv')
@@ -90,8 +108,8 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
   const handleSelectGenre = useCallback((id: number | undefined, name: string) => {
     setSelectedGenre(id); setSelectedGenreName(name); closeAll()
   }, [closeAll])
-  const handleSelectSort = useCallback((value: string, label: string) => {
-    setSortBy(value); setSortLabel(label); closeAll()
+  const handleSelectSort = useCallback((value: string) => {
+    setSortBy(value); closeAll()
   }, [closeAll])
   const handleSelectYear = useCallback((value: number | undefined, label: string) => {
     setSelectedYear(value); setSelectedYearLabel(label); closeAll()
@@ -150,7 +168,7 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
             onClick={() => { closeAll(); setSortOpen((o) => !o) }}
             className="flex items-center gap-2 rounded-md border border-border/60 bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-border"
           >
-            {sortLabel}
+            {activeSortOption.label}
             <ChevronDown
               className={`h-4 w-4 transition-transform ${sortOpen ? 'rotate-180' : ''}`}
               aria-hidden="true"
@@ -165,14 +183,14 @@ const BrowsePage = ({ mediaType }: BrowsePageProps) => {
                 transition={{ duration: 0.15 }}
                 className="absolute left-0 top-full z-30 mt-1 w-44 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-xl"
               >
-                {SORT_OPTIONS.map((opt) => (
+                {sortOptions.map((opt) => (
                   <button
                     key={opt.value}
-                    onClick={() => handleSelectSort(opt.value, opt.label)}
+                    onClick={() => handleSelectSort(opt.value)}
                     className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted"
                   >
                     {opt.label}
-                    {sortBy === opt.value && <Check className="h-4 w-4" aria-hidden="true" />}
+                    {activeSortOption.value === opt.value && <Check className="h-4 w-4" aria-hidden="true" />}
                   </button>
                 ))}
               </motion.div>

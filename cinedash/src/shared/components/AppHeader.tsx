@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useEffectEvent } from 'react'
 import { Film, Search, X, Menu, Sun, Moon } from 'lucide-react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useDebounce } from '@/shared/hooks/useDebounce'
+import { SEARCH_MIN_LENGTH } from '@/shared/constants/search'
 import { useThemeStore } from '@/shared/stores/themeStore'
 import { UserMenu } from './UserMenu'
 
@@ -28,20 +29,24 @@ const AppHeader = () => {
 
   const { theme, toggleTheme } = useThemeStore()
 
-  const [prevPathname, setPrevPathname] = useState(pathname)
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname)
-    if (pathname !== '/dashboard' && pathname !== '/') {
-      setSearchOpen(false)
-      setSearchValue('')
-    }
-  }
+  const resetSearchState = useEffectEvent(() => {
+    setSearchOpen(false)
+    setSearchValue('')
+  })
+
+  useEffect(() => {
+    if (pathname === '/dashboard' || pathname === '/') return
+    resetSearchState()
+  }, [pathname])
 
   useEffect(() => {
     if (!searchOpen) return
     void navigate({
       to: '/dashboard',
-      search: debouncedSearch.trim().length >= 2 ? { q: debouncedSearch.trim() } : {},
+      search:
+        debouncedSearch.trim().length >= SEARCH_MIN_LENGTH
+          ? { q: debouncedSearch.trim() }
+          : {},
     })
   }, [debouncedSearch, navigate, searchOpen])
 

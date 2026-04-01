@@ -6,13 +6,12 @@ import { AppFooter } from '@/shared/components/AppFooter'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal'
+import { parseMovieIdParam } from '@/features/movies/utils'
 
 const AuthLayout = () => {
   const matches = useMatches()
   const movieMatch = matches.find((m) => m.routeId === '/_auth/movie/$id')
-  const movieId = movieMatch
-    ? Number((movieMatch.params as { id: string }).id)
-    : null
+  const movieId = parseMovieIdParam((movieMatch?.params as { id?: string } | undefined)?.id)
   const mediaType =
     ((movieMatch?.search as { t?: 'movie' | 'tv' } | undefined)?.t) ?? 'movie'
 

@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { movieService } from '../services/movieService'
-import { movieKeys } from './queryKeys'
+import { tvKeys } from './queryKeys'
 import type { BrowseFilters } from '../types'
 
 type InfiniteFilters = Omit<BrowseFilters, 'page'>
@@ -9,7 +9,7 @@ const MAX_PAGES = 7
 
 export const useInfiniteTvShows = (filters: InfiniteFilters = {}, enabled = true) =>
   useInfiniteQuery({
-    queryKey: [...movieKeys.lists(), 'infinite-tv', filters] as const,
+    queryKey: tvKeys.infiniteList(filters),
     queryFn: ({ pageParam }) => movieService.discoverTv({ ...filters, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) =>

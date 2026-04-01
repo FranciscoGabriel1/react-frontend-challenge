@@ -22,3 +22,10 @@ export const formatYear = (releaseDate: string): string => {
 }
 
 export const formatRating = (rating: number): string => rating.toFixed(1)
+
+export const parseMovieIdParam = (id: string | undefined): number | null => {
+  if (!id) return null
+
+  const parsedId = Number(id)
+  return Number.isSafeInteger(parsedId) && parsedId > 0 ? parsedId : null
+}

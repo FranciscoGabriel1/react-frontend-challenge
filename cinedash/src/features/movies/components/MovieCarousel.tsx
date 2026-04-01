@@ -64,11 +64,14 @@ const MovieCarousel = ({ title, movies, isLoading, numbered }: MovieCarouselProp
           onClick={() => scroll('left')}
           className={`absolute left-0 top-0 z-20 flex h-full w-14 items-center justify-center bg-gradient-to-r from-background/95 to-transparent transition-opacity duration-200 ${
             leftVisible
-              ? 'opacity-0 group-hover/carousel:opacity-100'
+              ? 'opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100'
               : 'pointer-events-none opacity-0'
           }`}
           aria-label={`${title} - rolar para esquerda`}
           aria-hidden={!leftVisible}
+          aria-disabled={!leftVisible}
+          disabled={!leftVisible}
+          tabIndex={leftVisible ? 0 : -1}
         >
           <ChevronLeft className="h-6 w-6 drop-shadow-lg" />
         </button>
@@ -113,11 +116,14 @@ const MovieCarousel = ({ title, movies, isLoading, numbered }: MovieCarouselProp
           onClick={() => scroll('right')}
           className={`absolute right-0 top-0 z-20 flex h-full w-14 items-center justify-center bg-gradient-to-l from-background/95 to-transparent transition-opacity duration-200 ${
             rightVisible
-              ? 'opacity-0 group-hover/carousel:opacity-100'
+              ? 'opacity-0 group-hover/carousel:opacity-100 focus-visible:opacity-100'
               : 'pointer-events-none opacity-0'
           }`}
           aria-label={`${title} - rolar para direita`}
           aria-hidden={!rightVisible}
+          aria-disabled={!rightVisible}
+          disabled={!rightVisible}
+          tabIndex={rightVisible ? 0 : -1}
         >
           <ChevronRight className="h-6 w-6 drop-shadow-lg" />
         </button>

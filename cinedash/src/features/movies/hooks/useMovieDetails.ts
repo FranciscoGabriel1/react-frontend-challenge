@@ -9,11 +9,11 @@ export const useMovieDetails = (id: number, mediaType: 'movie' | 'tv' = 'movie')
   const [detailsQuery, creditsQuery, videosQuery] = useQueries({
     queries: [
       {
-        queryKey: movieKeys.detail(id),
+        queryKey: movieKeys.detail(id, mediaType),
         queryFn: () => (isTv ? movieService.getTvDetails(id) : movieService.getDetails(id)),
       },
       {
-        queryKey: movieKeys.credits(id),
+        queryKey: movieKeys.credits(id, mediaType),
         queryFn: () => (isTv ? movieService.getTvCredits(id) : movieService.getCredits(id)),
       },
       {

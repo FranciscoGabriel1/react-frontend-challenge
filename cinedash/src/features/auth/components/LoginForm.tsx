@@ -1,4 +1,4 @@
-import React from 'react'
+import type { ReactElement } from 'react'
 import { useForm, type ControllerRenderProps } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
@@ -18,8 +18,12 @@ import { useAuthStore } from '../store/authStore'
 import cinemaAnimation from '@/assets/animations/cinema.json'
 import { BannerPanel } from './BannerPanel'
 
-type LottieModule = ((props: LottieComponentProps) => React.ReactElement) & { default?: (props: LottieComponentProps) => React.ReactElement }
-const Lottie = ((LottieLib as LottieModule).default ?? LottieLib) as (props: LottieComponentProps) => React.ReactElement
+type LottieModule = ((props: LottieComponentProps) => ReactElement) & {
+  default?: (props: LottieComponentProps) => ReactElement
+}
+const Lottie = ((LottieLib as LottieModule).default ?? LottieLib) as (
+  props: LottieComponentProps,
+) => ReactElement
 
 export const LoginForm = () => {
   const navigate = useNavigate()
