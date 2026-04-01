@@ -1,0 +1,41 @@
+import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router'
+import { AnimatePresence } from 'framer-motion'
+import { useAuthStore } from '@/features/auth'
+import { AppHeader } from '@/shared/components/AppHeader'
+import { AppFooter } from '@/shared/components/AppFooter'
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { DashboardPage } from '@/pages/DashboardPage'
+import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal'
+import { parseMovieIdParam } from '@/features/movies/utils'
+
+const AuthLayout = () => {
+  const matches = useMatches()
+  const movieMatch = matches.find((m) => m.routeId === '/_auth/movie/$id')
+  const movieId = parseMovieIdParam((movieMatch?.params as { id?: string } | undefined)?.id)
+  const mediaType =
+    ((movieMatch?.search as { t?: 'movie' | 'tv' } | undefined)?.t) ?? 'movie'
+
+  return (
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <AppHeader />
+      <ErrorBoundary>
+        {movieId !== null ? <DashboardPage /> : <Outlet />}
+      </ErrorBoundary>
+      <AnimatePresence>
+        {movieId !== null && (
+          <MovieDetailModal key={movieId} id={movieId} mediaType={mediaType} />
+        )}
+      </AnimatePresence>
+      <AppFooter />
+    </div>
+  )
+}
+
+export const Route = createFileRoute('/_auth')({
+  beforeLoad: () => {
+    if (!useAuthStore.getState().isAuthenticated()) {
+      throw redirect({ to: '/login' })
+    }
+  },
+  component: AuthLayout,
+})
