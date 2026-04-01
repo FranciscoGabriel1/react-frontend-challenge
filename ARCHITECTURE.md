@@ -293,3 +293,11 @@ Estrategia focada em **comportamento**, nao em implementacao:
 | `WatchlistPage.test.tsx` | Render vazio, render com filmes, sorting, remocao |
 
 **O que optei por não testar:** componentes puramente visuais sem logica (MovieSkeleton, AppFooter), mocks de responses triviais, detalhes de implementacao CSS.
+
+
+
+---
+
+## Deploy e Ferramentas
+
+Utilizei o **Vercel** para build e pipeline de deploy (CI/CD automatico a cada push), e o **GitHub Copilot** para revisar o codigo durante o desenvolvimento.
