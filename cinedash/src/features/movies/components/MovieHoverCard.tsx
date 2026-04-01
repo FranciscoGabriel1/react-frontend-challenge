@@ -174,10 +174,11 @@ const MovieHoverCard = ({
             <button
               onClick={() =>
                 void navigate({
-                to: '/movie/$id',
-                params: { id: String(movie.id) },
-                search: mediaType === 'tv' ? { t: 'tv' as const } : {},
-              })
+                  to: '/movie/$id',
+                  params: { id: String(movie.id) },
+                  search: mediaType === 'tv' ? { t: 'tv' as const } : {},
+                  resetScroll: false,
+                })
               }
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-colors hover:bg-white/80"
               aria-label="Assistir"
@@ -211,6 +212,7 @@ const MovieHoverCard = ({
                 to: '/movie/$id',
                 params: { id: String(movie.id) },
                 search: mediaType === 'tv' ? { t: 'tv' as const } : {},
+                resetScroll: false,
               })
             }
             className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 transition-colors hover:border-white"

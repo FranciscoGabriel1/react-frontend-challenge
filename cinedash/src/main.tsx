@@ -5,7 +5,10 @@ import { QueryProvider, ThemeProvider } from '@/app/providers'
 import { routeTree } from './routeTree.gen'
 import '@/app/globals.css'
 
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  scrollRestoration: true,
+})
 
 declare module '@tanstack/react-router' {
   interface Register {

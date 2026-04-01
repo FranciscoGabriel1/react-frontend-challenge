@@ -99,6 +99,7 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
             to: '/movie/$id',
             params: { id: String(movie.id) },
             search: movie.mediaType === 'tv' ? { t: 'tv' as const } : {},
+            resetScroll: false,
           })
         }
         role="button"
@@ -109,6 +110,7 @@ const MovieCard = memo(({ movie, rank }: MovieCardProps) => {
               to: '/movie/$id',
               params: { id: String(movie.id) },
               search: movie.mediaType === 'tv' ? { t: 'tv' as const } : {},
+              resetScroll: false,
             })
           }
         }}

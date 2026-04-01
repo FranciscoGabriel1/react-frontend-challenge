@@ -92,6 +92,7 @@ const WatchlistPage = () => {
                 to: '/movie/$id',
                 params: { id: String(row.original.id) },
                 search: row.original.mediaType === 'tv' ? { t: 'tv' as const } : {},
+                resetScroll: false,
               })
             }
             className="text-left font-medium hover:underline max-w-[180px] truncate block"

@@ -78,6 +78,7 @@ const MovieHero = () => {
                 to: '/movie/$id',
                 params: { id: String(featured.id) },
                 search: featured.mediaType === 'tv' ? { t: 'tv' as const } : {},
+                resetScroll: false,
               })
             }
           >
